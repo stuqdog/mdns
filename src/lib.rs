@@ -64,7 +64,14 @@ pub mod discover;
 pub mod resolve;
 
 mod errors;
+// mdns.rs is compiled on all platforms; on macOS it is used only for the
+// loopback interface where mDNSResponder does not intercept multicast.
 mod mdns;
+#[cfg(target_os = "macos")]
+mod macos;
 mod response;
 
+// mDNSListener is only part of the public API on non-macOS.  On macOS it is
+// an implementation detail used internally for loopback discovery.
+#[cfg(not(target_os = "macos"))]
 pub use self::mdns::mDNSListener;

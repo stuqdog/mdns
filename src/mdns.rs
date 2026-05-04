@@ -9,6 +9,7 @@ use std::sync::Arc;
 
 #[cfg(not(target_os = "windows"))]
 use net2::unix::UnixUdpBuilderExt;
+use net2::UdpSocketExt;
 use std::net::SocketAddr;
 
 /// The IP address for the mDNS multicast socket.
@@ -23,6 +24,12 @@ fn mdns_interface_inner(
     let socket = create_socket()?;
 
     socket.set_multicast_loop_v4(with_loopback)?;
+    // Pin outgoing multicast to interface_addr so that when multiple interfaces
+    // are active (e.g. WiFi + loopback) the kernel does not route PTR queries
+    // through the wrong interface.  Without this, macOS sends loopback-bound
+    // queries out via WiFi (the default multicast route) and the local
+    // viam-server on 127.0.0.1 never receives them.
+    socket.set_multicast_if_v4(&interface_addr)?;
     socket.join_multicast_v4(&MULTICAST_ADDR, &interface_addr)?;
 
     let socket = Arc::new(UdpSocket::from(socket));
