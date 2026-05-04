@@ -27,8 +27,8 @@ fn mdns_interface_inner(
     // Pin outgoing multicast to interface_addr so that when multiple interfaces
     // are active (e.g. WiFi + loopback) the kernel does not route PTR queries
     // through the wrong interface.  Without this, macOS sends loopback-bound
-    // queries out via WiFi (the default multicast route) and the local
-    // viam-server on 127.0.0.1 never receives them.
+    // queries out via WiFi (the default multicast route) and local servers on
+    // 127.0.0.1 never receive them.
     socket.set_multicast_if_v4(&interface_addr)?;
     socket.join_multicast_v4(&MULTICAST_ADDR, &interface_addr)?;
 

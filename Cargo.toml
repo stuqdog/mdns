@@ -1,7 +1,7 @@
 [package]
 name = "viam-mdns"
 version = "3.0.1"
-authors = ["Dylan McKay <me@dylanmckay.io>", "Ethan Rodkin <ethanrodkin@viam.com"]
+authors = ["Dylan McKay <me@dylanmckay.io>", "Ethan Rodkin <ethan@viam.com"]
 edition = "2021"
 
 description = """
